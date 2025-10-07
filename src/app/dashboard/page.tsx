@@ -18,9 +18,26 @@ export default async function PrivatePage() {
 
   // ✅ If logged in, render the page
   return (
-    <div>
-      <h1>Welcome, {session.user.email}</h1>
-      <p>This is a private page only accessible to logged-in users.</p>
+    <div className="flex flex-col items-center justify-center min-h-screen w-full">
+      <div className="p-8 bg-white rounded-lg shadow-md text-center max-w-sm w-full">
+        <h1 className="text-2xl font-bold mb-4 text-gray-800">Dashboard</h1>
+        <p className="text-gray-600 mb-2">Welcome back!</p>
+        <p className="text-gray-800 font-semibold mb-6 break-all">
+          {session.user.email}
+        </p>
+
+        <form action="/auth/signout" method="post">
+          <button className="w-full px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">
+            Sign Out
+          </button>
+        </form>
+        {/*
+        <form action="/auth/signout" method="post">
+          <button className="button block" type="submit">
+            Sign out
+          </button>
+        </form> */}
+      </div>
     </div>
   );
 }

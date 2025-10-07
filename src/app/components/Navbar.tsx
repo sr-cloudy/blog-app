@@ -1,5 +1,5 @@
-import Link from "next/link";
-import React from "react";
+import Link from 'next/link';
+import React from 'react';
 
 const Navbar = async () => {
   return (
@@ -10,7 +10,7 @@ const Navbar = async () => {
         </Link>
 
         <div className="flex items-center gap-x-5">
-          <Link href="/private">Private</Link>
+          <Link href="/dashboard">Dashboard</Link>
         </div>
         <div className="flex items-center gap-x-5">
           <Link href="/login">

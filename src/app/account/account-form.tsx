@@ -75,7 +75,7 @@ export default function AccountForm({ user }: { user: User | null }) {
   }
 
   return (
-    <div className="form-widget">
+    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-4 text-foreground">
       <Avatar
         uid={user?.id ?? null}
         url={avatar_url}
@@ -85,57 +85,86 @@ export default function AccountForm({ user }: { user: User | null }) {
           updateProfile({ fullname, username, website, avatar_url: url });
         }}
       />
-      <div>
-        <label htmlFor="email">Email</label>
-        <input id="email" type="text" value={user?.email} disabled />
+
+      <div className="flex flex-col gap-1">
+        <label htmlFor="email" className="text-md">
+          Email
+        </label>
+        <input
+          id="email"
+          type="text"
+          value={user?.email}
+          disabled
+          className="rounded-md px-4 py-2 bg-inherit border mb-4 text-gray-500 cursor-not-allowed"
+        />
       </div>
-      <div>
-        <label htmlFor="fullName">Full Name</label>
+
+      <div className="flex flex-col gap-1">
+        <label htmlFor="fullName" className="text-md">
+          Full Name
+        </label>
         <input
           id="fullName"
           type="text"
           value={fullname || ''}
           onChange={(e) => setFullname(e.target.value)}
+          className="rounded-md px-4 py-2 bg-inherit border mb-4"
         />
       </div>
-      <div>
-        <label htmlFor="username">Username</label>
+
+      <div className="flex flex-col gap-1">
+        <label htmlFor="username" className="text-md">
+          Username
+        </label>
         <input
           id="username"
           type="text"
           value={username || ''}
           onChange={(e) => setUsername(e.target.value)}
+          className="rounded-md px-4 py-2 bg-inherit border mb-4"
         />
       </div>
-      <div>
-        <label htmlFor="website">Website</label>
+
+      <div className="flex flex-col gap-1">
+        <label htmlFor="website" className="text-md">
+          Website
+        </label>
         <input
           id="website"
           type="url"
           value={website || ''}
           onChange={(e) => setWebsite(e.target.value)}
+          className="rounded-md px-4 py-2 bg-inherit border mb-6"
         />
       </div>
 
-      <div>
-        <button
-          className="button primary block"
-          onClick={() =>
-            updateProfile({ fullname, username, website, avatar_url })
-          }
-          disabled={loading}
-        >
-          {loading ? 'Loading ...' : 'Update'}
-        </button>
-      </div>
+      <button
+        className="bg-blue-500 rounded-md px-4 py-2 text-white mb-2 disabled:opacity-50"
+        onClick={() =>
+          updateProfile({ fullname, username, website, avatar_url })
+        }
+        disabled={loading}
+      >
+        {loading ? 'Loading ...' : 'Update'}
+      </button>
 
-      <div>
-        <form action="/auth/signout" method="post">
-          <button className="button block" type="submit">
-            Sign out
-          </button>
-        </form>
-      </div>
+      {/* <form action="/auth/signout" method="post">
+        <button
+          className="border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2 w-full"
+          type="submit"
+        >
+          Sign out
+        </button>
+      </form> */}
+
+      <form action="../dashboard" method="post">
+        <button
+          className="border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2 w-full"
+          type="submit"
+        >
+          Profile
+        </button>
+      </form>
     </div>
   );
 }

@@ -69,36 +69,43 @@ export default function Avatar({
   };
 
   return (
-    <div>
+    <div className="flex flex-col items-center gap-4">
+      {/* Avatar image or placeholder */}
       {avatarUrl ? (
         <Image
           width={size}
           height={size}
           src={avatarUrl}
           alt="Avatar"
-          className="avatar image"
-          style={{ height: size, width: size }}
+          className="rounded-full object-cover border border-gray-300"
+          style={{ width: size, height: size }}
         />
       ) : (
         <div
-          className="avatar no-image"
-          style={{ height: size, width: size }}
-        />
+          className="flex items-center justify-center rounded-full bg-gray-100 text-gray-400 border border-gray-300"
+          style={{ width: size, height: size }}
+        >
+          <span className="text-sm">No Image</span>
+        </div>
       )}
-      <div style={{ width: size }}>
-        <label className="button primary block" htmlFor="single">
-          {uploading ? 'Uploading ...' : 'Upload'}
+
+      {/* Upload button */}
+      <div className="relative w-full max-w-[150px]">
+        <label
+          htmlFor="single"
+          className={`block text-center cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-md transition ${
+            uploading ? 'opacity-50 pointer-events-none' : ''
+          }`}
+        >
+          {uploading ? 'Uploading...' : 'Upload'}
         </label>
         <input
-          style={{
-            visibility: 'hidden',
-            position: 'absolute',
-          }}
-          type="file"
           id="single"
+          type="file"
           accept="image/*"
           onChange={uploadAvatar}
           disabled={uploading}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         />
       </div>
     </div>
