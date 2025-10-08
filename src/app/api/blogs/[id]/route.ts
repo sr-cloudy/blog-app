@@ -1,12 +1,11 @@
-// src/app/api/blogs/[id]/route.ts
-
 import { createClient } from '@/utils/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  context: { params: { id: string } },
 ) {
+  const { params } = context;
   const supabase = await createClient();
   const { title, content } = await req.json();
 
@@ -22,7 +21,7 @@ export async function PUT(
     .from('blogs')
     .update({ title, content })
     .eq('id', params.id)
-    .eq('author_id', user.id); // Ensure only the owner can update
+    .eq('author_id', user.id);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -33,8 +32,9 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  context: { params: { id: string } },
 ) {
+  const { params } = context;
   const supabase = await createClient();
 
   const {
@@ -49,7 +49,7 @@ export async function DELETE(
     .from('blogs')
     .delete()
     .eq('id', params.id)
-    .eq('author_id', user.id); // Ensure only the owner can delete
+    .eq('author_id', user.id);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -1,9 +1,9 @@
 // src/app/api/blogs/route.ts
 
 import { createClient } from '@/utils/supabase/server';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -18,7 +18,7 @@ export async function GET() {
   return NextResponse.json({ blogs: data }, { status: 200 });
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const supabase = await createClient();
   const { title, content } = await req.json();
 
