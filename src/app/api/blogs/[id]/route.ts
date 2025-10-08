@@ -5,7 +5,7 @@ export async function PUT(
   req: NextRequest,
   context: { params: { id: string } },
 ) {
-  const { params } = context;
+  const { id } = context.params;
   const supabase = await createClient();
   const { title, content } = await req.json();
 
@@ -20,7 +20,7 @@ export async function PUT(
   const { error } = await supabase
     .from('blogs')
     .update({ title, content })
-    .eq('id', params.id)
+    .eq('id', id)
     .eq('author_id', user.id);
 
   if (error) {
@@ -34,7 +34,7 @@ export async function DELETE(
   req: NextRequest,
   context: { params: { id: string } },
 ) {
-  const { params } = context;
+  const { id } = context.params;
   const supabase = await createClient();
 
   const {
@@ -48,7 +48,7 @@ export async function DELETE(
   const { error } = await supabase
     .from('blogs')
     .delete()
-    .eq('id', params.id)
+    .eq('id', id)
     .eq('author_id', user.id);
 
   if (error) {
