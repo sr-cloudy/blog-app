@@ -1,9 +1,16 @@
 import { createClient } from '@/utils/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
+// Define a generic type for the route parameters
+// This is the simplest way to satisfy the type checker
+// when it complains about a mismatch in `context` structure.
+type RouteContext<T> = {
+  params: T;
+};
+
 export async function PUT(
   req: NextRequest,
-  context: { params: { id: string } },
+  context: RouteContext<{ id: string }>,
 ) {
   const { id } = context.params;
   const supabase = await createClient();
@@ -30,9 +37,11 @@ export async function PUT(
   return NextResponse.json({ success: true });
 }
 
+// ----------------------------------------------------------------
+
 export async function DELETE(
   req: NextRequest,
-  context: { params: { id: string } },
+  context: RouteContext<{ id: string }>,
 ) {
   const { id } = context.params;
   const supabase = await createClient();
