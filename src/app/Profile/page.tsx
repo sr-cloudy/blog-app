@@ -1,6 +1,9 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server'; // Assumed server client utility
 import BlogManager from '../components/BlogManager';
+
+export const dynamic = 'force-dynamic';
+
 // This is the Server Component responsible for Authentication
 export default async function ProfilePage() {
   // 1. Initialize the server-side Supabase client
