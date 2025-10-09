@@ -32,7 +32,7 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Define your protected paths
-  const protectedPaths = ['/dashboard', '/private', '/settings'];
+  const protectedPaths = ['/dashboard', '/profile', '/account'];
   const isProtectedPath = protectedPaths.some((path) =>
     request.nextUrl.pathname.startsWith(path),
   );
