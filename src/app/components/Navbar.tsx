@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
+import AuthButton from './auth/AuthButton';
 
 const Navbar = async () => {
   return (
@@ -92,11 +93,12 @@ const Navbar = async () => {
         </ul>
       </div>
       <div className="navbar-end">
-        <form action="/auth/signout" method="post">
+        {/* <form action="/auth/signout" method="post">
           <button className="w-full px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">
             Sign Out
           </button>
-        </form>
+        </form> */}
+        <AuthButton />
       </div>
     </div>
   );

@@ -26,11 +26,11 @@ export default async function PrivatePage() {
           {session.user.email}
         </p>
 
-        {/* <form action="/auth/signout" method="post">
+        <form action="/auth/signout" method="post">
           <button className="w-full px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">
             Sign Out
           </button>
-        </form> */}
+        </form>
         {/*
         <form action="/auth/signout" method="post">
           <button className="button block" type="submit">

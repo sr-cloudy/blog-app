@@ -1,13 +1,15 @@
-// middleware.ts
 import { type NextRequest, NextResponse } from 'next/server';
-import { updateSession } from '@/utils/supabase/middleware';
+// ⚠️ Adjust the import path for your utility file if necessary
+import { updateSession } from './utils/supabase/middleware';
 import { createServerClient } from '@supabase/ssr';
 
 export async function middleware(request: NextRequest) {
-  // 🔄 Step 1: Refresh session cookies
+  // 1. Run the Supabase session update utility first
+  // This refreshes the cookies and ensures the response carries them.
   const response = await updateSession(request);
 
-  // 🔐 Step 2: Create Supabase client for auth check
+  // 2. We now need a *new* server client (after updateSession ran)
+  // to read the *current* session for protection logic.
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
@@ -15,6 +17,7 @@ export async function middleware(request: NextRequest) {
       cookies: {
         getAll: () => request.cookies.getAll(),
         setAll: (cookiesToSet) => {
+          // This is a dummy setAll, as we only need to READ the cookies here.
           cookiesToSet.forEach(({ name, value, options }) => {
             response.cookies.set(name, value, options);
           });
@@ -22,31 +25,48 @@ export async function middleware(request: NextRequest) {
       },
     },
   );
-  console.log('🚀 ~ middleware ~ supabase:', supabase);
 
+  // 3. Get the user/session for protection check
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  // 🛡️ Step 3: Define protected routes
-  const protectedRoutes = ['/dashboard', '/account', '/settings'];
-  const pathname = request.nextUrl.pathname;
-  const isProtected = protectedRoutes.some((route) =>
-    pathname.startsWith(route),
+  // Define your protected paths
+  const protectedPaths = ['/dashboard', '/private', '/settings'];
+  const isProtectedPath = protectedPaths.some((path) =>
+    request.nextUrl.pathname.startsWith(path),
   );
 
-  // 🚫 Step 4: Redirect to login if not authenticated
-  if (isProtected && !session) {
+  // 4. Protection Logic (Redirect logged-out users)
+  if (!user && isProtectedPath) {
     const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('redirectedFrom', pathname);
+    // Optionally add a 'next' param to redirect back after login
+    loginUrl.searchParams.set('next', request.nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
   }
 
+  // 5. Optional: Redirect logged-in users away from auth pages
+  const authPaths = ['/login', '/signup'];
+  const isAuthPath = authPaths.includes(request.nextUrl.pathname);
+
+  if (user && isAuthPath) {
+    // Redirect logged-in users to the dashboard or home page
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+  // 6. If no redirects are needed, return the response with updated cookies
   return response;
 }
 
+// Configuration to run middleware on most paths, excluding static assets
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    /*
+     * Match all paths except:
+     * - API routes (api)
+     * - Static files (_next/static, _next/image, favicon.ico, etc.)
+     * - Public files (e.g., specific images in /public)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$).*)',
   ],
 };
