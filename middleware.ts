@@ -22,6 +22,7 @@ export async function middleware(request: NextRequest) {
       },
     },
   );
+  console.log('🚀 ~ middleware ~ supabase:', supabase);
 
   const {
     data: { session },

@@ -67,7 +67,7 @@ export default function BlogsPage() {
             <p className="text-gray-700 mb-4 whitespace-pre-line">
               {blog.content}
             </p>
-            <div className="text-sm text-gray-500 flex justify-between">
+            <div className="text-sm text-gray-500 flex justify-between gap-2">
               <span>By: {blog.profiles?.full_name ?? 'Unknown author'}</span>
               <span>{new Date(blog.created_at).toLocaleDateString()}</span>
             </div>
